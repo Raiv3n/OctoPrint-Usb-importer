@@ -10,7 +10,7 @@
 KERNEL=="sd*", SUBSYSTEMS=="usb",       ACTION=="add",  PROGRAM="/bin/systemd-escape -p --template=usbmount@.service $env{DEVNAME}", ENV{SYSTEMD_WANTS}+="%c"
 KERNEL=="ub*", SUBSYSTEMS=="usb",       ACTION=="add",  PROGRAM="/bin/systemd-escape -p --template=usbmount@.service $env{DEVNAME}", ENV{SYSTEMD_WANTS}+="%c"
 KERNEL=="sd*",                          ACTION=="remove",       RUN+="/usr/share/usbmount/usbmount remove"
-KERNEL=="ub*",                          ACTION=="remove",       RUN+="/usr/share/usbmount/usbmount remove"```
+KERNEL=="ub*",                          ACTION=="remove",       RUN+="/usr/share/usbmount/usbmount remove"``` and save
  8. Create the file **usbmount@.service** in **/etc/systemd/system/** with `sudo nano /etc/systemd/system/usbmount@.service`
  9. Paste this: ```[Unit]
 BindTo=%i.device
@@ -20,8 +20,15 @@ Type=oneshot
 TimeoutStartSec=0
 Environment=DEVNAME=%I
 ExecStart=/usr/share/usbmount/usbmount add
-RemainAfterExit=yes```
+RemainAfterExit=yes``` and save
  10. Create the move script with `nano /home/pi/scripts/movefiles` 
  11. Paste this: ```cp /media/usb0/*.stl /home/pi/.octoprint/uploads/USB/
    cp /media/usb0/*.gcode /home/pi/.octoprint/uploads/USB/ ```
- 12. Reboot. `sudo reboot`
+ 12. Create UDEV rule with `sudo nano /etc/udev/rules.d/85-my_rule.rules`
+ 13. Add `ACTION=="add", SUBSYSTEM=="usb_device",RUN+="usr/bin/local/script.sh"` and save
+ 14. Reboot. `sudo reboot`
+
+
+
+
+
